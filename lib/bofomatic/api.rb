@@ -8,14 +8,14 @@ module BofOMatic
       @apikey = apikey
     end
 
-    def proposals
-      response = RestClient.get "#{@url}/api/v1/proposals", { Authorization: "Bearer #{@apikey}" }
-      proposals = {}
-      JSON.parse(response).each do |id, proposal_hash|
-        proposals[id.to_i] = Proposal.new(proposal_hash)
-      end
+    def api_get(path_fragment)
+      response = RestClient.get "#{@url}/api/v1/#{path_fragment}", { Authorization: "Bearer #{@apikey}" }
+      # TODO: error handling
+      JSON.parse(response)
+    end
 
-      proposals
+    def proposals
+      Proposals.new(self)
     end
   end
 end
